@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style type="text/css">
+<!--
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px darkgray solid;
+}
+-->
+</style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Sex</th>
+                <th>Birthday</th>
+                <th>Mail Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="employee : *{employees}">
+                <td th:text="${employee.no}" />
+                <td th:text="${employee.firstName}" />
+                <td th:text="${employee.lastName}" />
+                <td th:text="${employee.sex}" />
+                <td th:text="${employee.birthday}" />
+                <td th:text="${employee.mailAddress}" />
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

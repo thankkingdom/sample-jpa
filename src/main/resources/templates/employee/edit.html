@@ -9,13 +9,11 @@ label {
     width: 6em;
     line-height: 180%;
 }
-
-table {
-    border-collapse: collapse;
-}
-
-th, td {
-    border: 1px darkgray solid;
+.error {
+    border: solid 1px crimson;
+    color: crimson;
+    background-color: lavenderblush;
+    padding: 0.2em;
 }
 -->
 </style>
@@ -28,23 +26,29 @@ th, td {
 <body>
     <div class="container">
         <div class="row">
-            <div class="col" style="padding: 10px">
-                <h1>社員一覧</h1>
+            <div class="col">
+                <h1>社員編集</h1>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <form action="/employee/list" th:action="@{/employee/list}" th:object="${employee}">
+                <form action="/employee/save" th:action="@{/employee/save}" th:object="${employee}">
+                    
+                    <div th:each="e : ${#fields.detailedErrors()}"
+                        th:text="${e.message}" th:class="error"></div>
+                    
+                    <input type="hidden" name="no" th:value="*{no}">
+                    <input type="hidden" name="version" th:value="*{version}">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="firstName">First Name</label>
-                            <input type="text" id="firstName" name="firstName" size="6"
-                                class="form-control" th:value="*{firstName}" placeholder="名">
+                            <input type="text" id="firstName" name="firstName" size="6" class="form-control"
+                                th:value="*{firstName}">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="lastName">Last Name</label>
-                            <input type="text" id="lastNmae" name="lastName" size="6" class="form-control"
-                                th:value="*{lastName}" placeholder="姓">
+                            <input type="text" id="lastName" name="lastName" size="6" class="form-control"
+                                th:value="*{lastName}">
                         </div>
                     </div>
                     <div class="form-row">
@@ -78,37 +82,9 @@ th, td {
                     </div>
                     <br>
                     <div class="">
-                        <input type="submit" value="search" class="btn btn-primary btn-lg">
-                        <input type="submit" name="insertAction" value="insert" class="btn btn-outline-secondary btn-lg">
+                        <input type="submit" value="save" class="btn btn-primary btn-lg">
+                        <input type="button" onclick="location.href='list'" value="back" class="btn btn-outline-secondary btn-lg">
                     </div>
-                    <br>
-                    <form acction="/employee/delete" th:action="@{/employee/delete}">
-                        <table class="table table-hover">
-                            <thead class="thead-light">
-                                <th><input type="submit" value="delete"></th>
-                                <th>No</th>
-                                <th>FirstName</th>
-                                <th>LastName</th>
-                                <th>Sex</th>
-                                <th>Birthday</th>
-                                <th>Mail Address</th>
-                                <th>Department</th>
-                            </thead>
-                            <tbody>
-                                <tr th:each="employee : ${employees}">
-                                    <td><input type="checkbox" name="nos" th:value="${employee.no}" />
-                                    <td><a th:href="@{/employee/edit((no=${employee.no}))}"
-                                            th:text="${employee.no}"></a></td>
-                                    <td th:text="${employee.firstName}" />
-                                    <td th:text="${employee.lastName}" />
-                                    <td th:text="${employee.sex}" />
-                                    <td th:text="${employee.birthday}" />
-                                    <td th:text="${employee.mailAddress}" />
-                                    <td><div th:if="${employee.department != null}" th:text="${employee.department.name}"></div></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </form>
                 </form>
             </div>
         </div>

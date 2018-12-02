@@ -22,8 +22,9 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.example.samplejpa.entity.Department;
 import com.example.samplejpa.entity.Employee;
-import com.example.samplejpa.entity.Employee.Sex;
+import com.example.samplejpa.repository.DepartmentRepository;
 import com.example.samplejpa.repository.EmployeeRepository;
 
 @Service
@@ -35,6 +36,9 @@ public class EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
+	@Autowired
+	private DepartmentRepository departmentRepository;
+
 	public <T> T cast(Object o) {
 		return (T) o;
 	}
@@ -45,24 +49,27 @@ public class EmployeeService {
 		list = entityManager.createNativeQuery("SELECT * FROM jpa.employee", Employee.class).getResultList();
 		list = cast(entityManager.createNativeQuery("SELECT * FROM jpa.employee", Employee.class).getResultList());
 		list = employeeRepository.findAllById(Arrays.asList(1, 2));
-		list = employeeRepository.findAll(Sort.by(Order.asc("mailAddress"), Order.asc("no")));
+		list = employeeRepository.findAll(Sort.by(Order.asc("no")));
 
-		Employee employee = new Employee();
-		Example<Employee> employeeExample = Example.of(employee);
+		// Employee employee = new Employee();
+		// Example<Employee> employeeExample = Example.of(employee);
 
-		employee.setSex(Sex.female);
-		// Null値のカラムを条件に加える
-		employeeExample = Example.of(employee, ExampleMatcher.matching().withIncludeNullValues());
-		// Null値のカラムを条件に加えない
-		employeeExample = Example.of(employee, ExampleMatcher.matching().withIgnoreNullValues());
+		// employee.setSex(Sex.female);
+		//// Null値のカラムを条件に加える
+		// employeeExample = Example.of(employee,
+		// ExampleMatcher.matching().withIncludeNullValues());
+		//// Null値のカラムを条件に加えない
+		// employeeExample = Example.of(employee,
+		// ExampleMatcher.matching().withIgnoreNullValues());
 
-		// メールアドレスの部分一致検索
-		employee = new Employee();
-		employee.setMailAddress("yamada");
-		employeeExample = Example.of(employee, ExampleMatcher.matching().withMatcher("mailAddress",
-				new ExampleMatcher.GenericPropertyMatcher().contains()));
+		//// メールアドレスの部分一致検索
+		// employee = new Employee();
+		// employee.setMailAddress("yamada");
+		// employeeExample = Example.of(employee,
+		//// ExampleMatcher.matching().withMatcher("mailAddress",
+		// new ExampleMatcher.GenericPropertyMatcher().contains()));
 
-		list = employeeRepository.findAll(employeeExample);
+		// list = employeeRepository.findAll(employeeExample);
 
 		return list;
 	}
@@ -91,5 +98,21 @@ public class EmployeeService {
 
 	public Page<Employee> search(Pageable pageable) {
 		return employeeRepository.search(pageable);
+	}
+
+	public Optional<Employee> getEmployee(Integer no) {
+		// return employeeRepository.findById(no);
+		Employee employee = new Employee();
+		employee.setNo(no);
+		Example<Employee> example = Example.of(employee, ExampleMatcher.matching().withIgnoreNullValues());
+		return employeeRepository.findOne(example);
+	}
+
+	public List<Department> getDepartmentList() {
+		return departmentRepository.findAll();
+	}
+
+	public void saveEmployee(Employee employee) {
+		employeeRepository.save(employee);
 	}
 }

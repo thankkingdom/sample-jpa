@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -48,6 +49,9 @@ public class Employee implements Serializable {
 
 	@Column(unique = true)
 	private String mailAddress;
+
+	@Version
+	private Integer version;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "departmentCode")
